@@ -22,7 +22,7 @@ typeof module === "object" && typeof module.exports === "object"
 (program
   (expression_statement
     (binary_expression
-      (unary_expression (class (class_body)))
+      (unary_expression (class_expression (class_body)))
       (string)))
   (expression_statement
     (binary_expression

@@ -231,8 +231,8 @@ module.exports = function defineGrammar(dialect) {
       parenthesized_expression: ($, previous) => seq(
         '(',
         choice(
-          seq($._expression, optional($.type_annotation)),
-          $.sequence_expression
+          seq(field('expr', $._expression), optional($.type_annotation)),
+          field('expr', $.sequence_expression)
         ),
         ')'
       ),
@@ -298,14 +298,14 @@ module.exports = function defineGrammar(dialect) {
       ),
 
       type_assertion: $ => prec(PREC.TYPE_ASSERTION, seq(
-        $.type_arguments,
+        field('type_arguments', $.type_arguments),
         $._expression
       )),
 
       as_expression: $ => prec.left(PREC.AS_EXPRESSION, seq(
         $._expression,
         'as',
-        choice($._type, $.template_string)
+        field('type', choice($._type, $.template_string))
       )),
 
       class_heritage: $ => choice(
@@ -329,7 +329,7 @@ module.exports = function defineGrammar(dialect) {
         )
       ),
 
-      class: $ => seq(
+      class_expression: $ => seq(
         repeat(field('decorator', $.decorator)),
         'class',
         field('name', optional($._type_identifier)),
@@ -463,17 +463,17 @@ module.exports = function defineGrammar(dialect) {
       _parameter_name: $ => seq(
         optional($.accessibility_modifier),
         optional($.readonly),
-        choice(
+        field('name', choice(
           $.identifier,
           alias($._reserved_identifier, $.identifier),
           $._destructuring_pattern,
           $.this
-        )
+        ))
       ),
 
       rest_parameter: $ => seq(
         '...',
-        $.identifier,
+        field('name', $.identifier),
         optional($.type_annotation)
       ),
 
